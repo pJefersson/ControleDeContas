@@ -85,6 +85,7 @@ function listarContas() {
 
   console.log('\n=== Listagem de Contas ===');
   let totalPendente = 0;
+  let totalPago = 0;
 
   contas.forEach((conta, index) => {
     const status = conta.paga ? 'Paga' : 'Pendente';
@@ -94,11 +95,14 @@ function listarContas() {
 
     if (!conta.paga) {
       totalPendente += parseFloat(conta.valor);
+    }else{
+      totalPago += parseFloat(conta.valor);
     }
   });
 
   console.log('\n===========================');
   console.log(`Total de contas em aberto: R$${totalPendente.toFixed(2)}`);
+  console.log(`Total de contas pagas: R$${totalPago.toFixed(2)}`);
 }
 
 function totalPorCartao(){
@@ -136,6 +140,8 @@ async function marcarContaComoPaga() {
       validate: validarIndice,
     },
   ]);
+  
+  
 
   contas[indice - 1].paga = true;
   salvarContas();
@@ -144,23 +150,32 @@ async function marcarContaComoPaga() {
 
 // Função para excluir uma conta
 async function excluirConta() {
+  const menu = contas.map((x) => x = {value: x.nome, paga: " [ " +  x.paga ? 'Paga' : 'Pendente' + "]"})
+ 
+
   if (contas.length === 0) {
     console.log('Nenhuma conta para excluir.');
     return;
   }
-
-  const { indice } = await inquirer.prompt([
+  
+  const { selecao } = await inquirer.prompt([
     {
-      type: 'input',
-      name: 'indice',
-      message: 'Digite o número da conta a ser excluída:',
-      validate: validarIndice,
+      type: 'checkbox',
+      name: 'selecao',
+      message: 'selecione a conta a ser excluída:',
+      choices:[...menu]    
     },
   ]);
-
-  contas.splice(indice - 1, 1);
-  salvarContas();
-  console.log('Conta excluída com sucesso!');
+  
+  const salvas = contas.filter((item) => !selecao.includes(item.nome))
+  if(selecao.length == 0){
+    console.log("Nenhuma conta selecionada")
+  }else{
+    contas = [...salvas]
+    salvarContas();
+    console.log('Conta excluída com sucesso!');
+  }
+  
 }
 
 // Validação para números inteiros válidos

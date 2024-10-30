@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "nome": "Feira",
+    "valor": "1",
+    "vencimento": "10-11-2024",
+    "banco": "nubank",
+    "paga": true
+  },
+  {
+    "nome": "teste1",
+    "valor": "3",
+    "vencimento": "10",
+    "banco": "nubank",
+    "paga": false
+  }
+]
