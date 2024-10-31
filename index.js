@@ -1,23 +1,31 @@
-const {select, checkbox} = require('@inquirer/prompts')
 const inquirer = require('inquirer');
 const fs = require('fs'); // Módulo para manipular arquivos
 
-const caminhoArquivo = 'contas.json';
+const caminhoArquivo = ['contas.json', 'bancos.json'];
 let contas = [];
-
+let bancos = [{value:'nubank', name: "Nubank"}]
 // Carrega as contas do arquivo JSON ao iniciar o sistema
 function carregarContas() {
-  if (fs.existsSync(caminhoArquivo)) {
-    const dados = fs.readFileSync(caminhoArquivo, 'utf-8');
-    contas = JSON.parse(dados);
+  if (fs.existsSync(caminhoArquivo[0])) {
+    const dadosContas = fs.readFileSync(caminhoArquivo[0], 'utf-8');
+    contas = JSON.parse(dadosContas);
   } else {
     contas = [];
   }
 }
 
+function carregarBancos() {
+  if (fs.existsSync(caminhoArquivo[1])) {
+    const dadosBancos = fs.readFileSync(caminhoArquivo[1], 'utf-8');
+    contas = JSON.parse(dadosBancos);
+  } else {
+    bancos = [];
+  }
+}
 // Salva as contas no arquivo JSON
 function salvarContas() {
-  fs.writeFileSync(caminhoArquivo, JSON.stringify(contas, null, 2));
+  fs.writeFileSync(caminhoArquivo[0], JSON.stringify(contas, null, 2));
+  fs.writeFileSync(caminhoArquivo[1], JSON.stringify(bancos, null, 2));
 }
 
 // Função principal do menu
@@ -30,6 +38,7 @@ async function menuPrincipal() {
       message: 'Selecione uma opção:',
       choices: [
         'Adicionar Conta',
+        'Adicionar Banco/Cartão',
         'Listar Contas',
         'Total por cartao',
         'Marcar Conta como Paga',
@@ -42,6 +51,9 @@ async function menuPrincipal() {
   switch (resposta.opcao) {
     case 'Adicionar Conta':
       await adicionarConta();
+      break;
+    case 'Adicionar Banco/Cartão':
+      await adicionarBanco();
       break;
     case 'Listar Contas':
       await listarContas();
@@ -63,19 +75,33 @@ async function menuPrincipal() {
   // Voltar ao menu principal após cada ação
   menuPrincipal();
 }
-
+async function adicionarBanco() {
+  const novoBanco = await inquirer.prompt([
+    { name: 'nome', message: 'Nome do Banco/Cartão:', total: 0 },    
+  ]);
+  if(novoBanco.name == ''){
+    console.log("Formato de banco inválido")
+  }else{
+    contas.push({ ...novoBanco, total: 0 });
+    salvarContas();
+    console.log('Conta adicionada com sucesso!');
+  }  
+}
 // Função para adicionar uma nova conta
 async function adicionarConta() {
   const novaConta = await inquirer.prompt([
     { name: 'nome', message: 'Nome da Conta:' },
     { name: 'valor', message: 'Valor da Conta:', validate: validarNumero },
     { name: 'vencimento', message: 'Data de Vencimento (dd/mm/aaaa):' },
-    { name: "banco", message: "Digite o banco/cartão"}
+    { type:'list', name: 'banco', message: 'Selecione seu banco', choices: [...bancos]}
   ]);
-
-  contas.push({ ...novaConta, paga: false });
-  salvarContas();
-  console.log('Conta adicionada com sucesso!');
+  if(novaConta.name == '' || novaConta.valor.length == 0){
+    console.log("Formato da conta inválido")
+  }else{
+    contas.push({ ...novaConta, paga: false });
+    salvarContas();
+    console.log('Conta adicionada com sucesso!');
+  }  
 }
 
 // Função para listar todas as contas
@@ -106,12 +132,13 @@ async function listarContas() {
   console.log(`Contas em aberto: R$${totalPendente.toFixed(2)}`);
   console.log(`Contas pagas: R$${totalPago.toFixed(2)}`);
   const opcao = [{value: "voltar"}]
-  const voltar = await checkbox({
+  const { voltar } = await inquirer.prompt([{
+    name: 'voltar',
+    type: 'list',
     message: "",
-    choices: [...opcao],
-    instrutions: false
+    choices: [...opcao]
 
-  })
+  }])
 }
 
 function totalPorCartao(){

@@ -12,5 +12,23 @@
     "vencimento": "10",
     "banco": "nubank",
     "paga": false
+  },
+  {
+    "nome": "",
+    "valor": "",
+    "vencimento": "",
+    "banco": "",
+    "paga": false
+  },
+  {
+    "nome": "1",
+    "valor": "1",
+    "vencimento": "1",
+    "banco": "nubank",
+    "paga": false
+  },
+  {
+    "nome": "Will",
+    "total": 0
   }
 ]
