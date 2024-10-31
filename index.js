@@ -21,6 +21,7 @@ function salvarContas() {
 
 // Função principal do menu
 async function menuPrincipal() {
+  
   const resposta = await inquirer.prompt([
     {
       type: 'list',
@@ -101,8 +102,8 @@ function listarContas() {
   });
 
   console.log('\n===========================');
-  console.log(`Total de contas em aberto: R$${totalPendente.toFixed(2)}`);
-  console.log(`Total de contas pagas: R$${totalPago.toFixed(2)}`);
+  console.log(`Contas em aberto: R$${totalPendente.toFixed(2)}`);
+  console.log(`Contas pagas: R$${totalPago.toFixed(2)}`);
 }
 
 function totalPorCartao(){
