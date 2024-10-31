@@ -1,3 +1,4 @@
+const {select, checkbox} = require('@inquirer/prompts')
 const inquirer = require('inquirer');
 const fs = require('fs'); // Módulo para manipular arquivos
 
@@ -43,7 +44,7 @@ async function menuPrincipal() {
       await adicionarConta();
       break;
     case 'Listar Contas':
-      listarContas();
+      await listarContas();
       break;
     case 'Total por cartao':
       await totalPorCartao();
@@ -78,7 +79,7 @@ async function adicionarConta() {
 }
 
 // Função para listar todas as contas
-function listarContas() {
+async function listarContas() {
   if (contas.length === 0) {
     console.log('Nenhuma conta cadastrada.');
     return;
@@ -104,6 +105,13 @@ function listarContas() {
   console.log('\n===========================');
   console.log(`Contas em aberto: R$${totalPendente.toFixed(2)}`);
   console.log(`Contas pagas: R$${totalPago.toFixed(2)}`);
+  const opcao = [{value: "voltar"}]
+  const voltar = await checkbox({
+    message: "",
+    choices: [...opcao],
+    instrutions: false
+
+  })
 }
 
 function totalPorCartao(){
