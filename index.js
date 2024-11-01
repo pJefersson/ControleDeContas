@@ -49,6 +49,7 @@ async function menuPrincipal() {
         'Total por cartao',
         'Marcar Conta como Paga',
         'Excluir Conta',
+        'Excluir Banco',
         'Sair'
       ],
     },
@@ -72,6 +73,9 @@ async function menuPrincipal() {
       break;
     case 'Excluir Conta':
       await excluirConta();
+      break;
+    case 'Excluir Banco':
+      await excluirBanco();
       break;
     case 'Sair':
       console.log('Saindo do sistema. Até logo!');
@@ -220,6 +224,34 @@ async function excluirConta() {
     contas = [...salvas]
     salvarContas();
     console.log('Conta excluída com sucesso!');
+  }
+  
+}
+async function excluirBanco() {
+  const menuBancos = bancos.map((b) => b = {value: b.nome})
+ 
+
+  if (contas.length === 0) {
+    console.log('Nenhuma conta para excluir.');
+    return;
+  }
+  
+  const { selecaoBancos } = await inquirer.prompt([
+    {
+      type: 'checkbox',
+      name: 'selecaoBancos',
+      message: 'selecione a conta a ser excluída:',
+      choices:[...menuBancos]    
+    },
+  ]);
+  
+  const salvasBancos = bancos.filter((itemB) => !selecaoBancos.includes(itemB.nome))
+  if(selecaoBancos.length == 0){
+    console.log("Nenhum banco selecionado")
+  }else{
+    bancos = [...salvasBancos]
+    salvarBancos();
+    console.log('Banco excluído com sucesso!');
   }
   
 }
