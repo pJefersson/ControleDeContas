@@ -15,7 +15,7 @@ function carregarContas() {
     contas = [];
   }
 }
-
+// Carrega os bancos do arquivo JSON ao iniciar o sistema
 function carregarBancos() {
   if (fs.existsSync(caminhoArquivoBancos)) {
     const dadosBancos = fs.readFileSync(caminhoArquivoBancos, 'utf-8');
@@ -29,7 +29,7 @@ function carregarBancos() {
 function salvarContas() {
   fs.writeFileSync(caminhoArquivoContas, JSON.stringify(contas, null, 2));
 }
-
+// Salva os bancos no arquivo JSON
 function salvarBancos() {
   fs.writeFileSync(caminhoArquivoBancos, JSON.stringify(bancos, null, 2));
 }
@@ -86,6 +86,7 @@ async function menuPrincipal() {
   menuPrincipal();
 }
 
+// Função para adicionar um novo banco
 async function adicionarBanco() {
   const novoBanco = await inquirer.prompt([
     {name:'nome', message: 'Nome do Banco/Cartão:'}    
@@ -93,7 +94,6 @@ async function adicionarBanco() {
   if(novoBanco.nome == ""){
     console.log("Formato de banco inválido")
     
-
   }else{
     bancos.push({...novoBanco});
     salvarBancos();
@@ -154,7 +154,7 @@ async function listarContas() {
 
   }])
 }
-
+// Função para listar totais por cartão/banco
 function totalPorCartao(){
   let nubank = 0;
   let will = 0;
@@ -173,7 +173,6 @@ function totalPorCartao(){
   console.log(`Total de contas em Will: R$${will.toFixed(2)}`);
   console.log(`Total de contas em PicPay: R$${picpay.toFixed(2)}`);
 }
-
 
 // Função para marcar uma conta como paga
 async function marcarContaComoPaga() {
@@ -227,9 +226,10 @@ async function excluirConta() {
   }
   
 }
+
+// Função para excluir um banco
 async function excluirBanco() {
   const menuBancos = bancos.map((b) => b = {value: b.nome})
- 
 
   if (contas.length === 0) {
     console.log('Nenhuma conta para excluir.');
@@ -241,19 +241,19 @@ async function excluirBanco() {
       type: 'checkbox',
       name: 'selecaoBancos',
       message: 'selecione a conta a ser excluída:',
-      choices:[...menuBancos]    
+      choices:[...menuBancos],
     },
   ]);
   
   const salvasBancos = bancos.filter((itemB) => !selecaoBancos.includes(itemB.nome))
+
   if(selecaoBancos.length == 0){
     console.log("Nenhum banco selecionado")
   }else{
     bancos = [...salvasBancos]
     salvarBancos();
     console.log('Banco excluído com sucesso!');
-  }
-  
+  }  
 }
 
 // Validação para números inteiros válidos
