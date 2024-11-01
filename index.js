@@ -1,13 +1,15 @@
 const inquirer = require('inquirer');
 const fs = require('fs'); // Módulo para manipular arquivos
 
-const caminhoArquivo = ['contas.json', 'bancos.json'];
+const caminhoArquivoContas = 'contas.json';
+const caminhoArquivoBancos = 'bancos.json';
 let contas = [];
-let bancos = [{value:'nubank', name: "Nubank"}]
+let bancos = [{value: "Nubank"}];
+
 // Carrega as contas do arquivo JSON ao iniciar o sistema
 function carregarContas() {
-  if (fs.existsSync(caminhoArquivo[0])) {
-    const dadosContas = fs.readFileSync(caminhoArquivo[0], 'utf-8');
+  if (fs.existsSync(caminhoArquivoContas)) {
+    const dadosContas = fs.readFileSync(caminhoArquivoContas, 'utf-8');
     contas = JSON.parse(dadosContas);
   } else {
     contas = [];
@@ -15,17 +17,21 @@ function carregarContas() {
 }
 
 function carregarBancos() {
-  if (fs.existsSync(caminhoArquivo[1])) {
-    const dadosBancos = fs.readFileSync(caminhoArquivo[1], 'utf-8');
-    contas = JSON.parse(dadosBancos);
+  if (fs.existsSync(caminhoArquivoBancos)) {
+    const dadosBancos = fs.readFileSync(caminhoArquivoBancos, 'utf-8');
+    bancos = JSON.parse(dadosBancos);
   } else {
     bancos = [];
   }
 }
+
 // Salva as contas no arquivo JSON
 function salvarContas() {
-  fs.writeFileSync(caminhoArquivo[0], JSON.stringify(contas, null, 2));
-  fs.writeFileSync(caminhoArquivo[1], JSON.stringify(bancos, null, 2));
+  fs.writeFileSync(caminhoArquivoContas, JSON.stringify(contas, null, 2));
+}
+
+function salvarBancos() {
+  fs.writeFileSync(caminhoArquivoBancos, JSON.stringify(bancos, null, 2));
 }
 
 // Função principal do menu
@@ -75,25 +81,29 @@ async function menuPrincipal() {
   // Voltar ao menu principal após cada ação
   menuPrincipal();
 }
+
 async function adicionarBanco() {
   const novoBanco = await inquirer.prompt([
-    { name: 'nome', message: 'Nome do Banco/Cartão:', total: 0 },    
+    {name:'nome', message: 'Nome do Banco/Cartão:'}    
   ]);
-  if(novoBanco.name == ''){
+  if(novoBanco.nome == ""){
     console.log("Formato de banco inválido")
+    
+
   }else{
-    contas.push({ ...novoBanco, total: 0 });
-    salvarContas();
-    console.log('Conta adicionada com sucesso!');
+    bancos.push({...novoBanco});
+    salvarBancos();
+    console.log(`Banco: ${novoBanco.nome} adicionado com sucesso!`);
   }  
 }
 // Função para adicionar uma nova conta
 async function adicionarConta() {
+  const menuBancos = bancos.map((b) => b = {value: b.nome,})
   const novaConta = await inquirer.prompt([
     { name: 'nome', message: 'Nome da Conta:' },
     { name: 'valor', message: 'Valor da Conta:', validate: validarNumero },
     { name: 'vencimento', message: 'Data de Vencimento (dd/mm/aaaa):' },
-    { type:'list', name: 'banco', message: 'Selecione seu banco', choices: [...bancos]}
+    { type:'list', name: 'banco', message: 'Selecione seu banco', choices: [...menuBancos]}
   ]);
   if(novaConta.name == '' || novaConta.valor.length == 0){
     console.log("Formato da conta inválido")
@@ -230,4 +240,5 @@ function validarNumero(valor) {
 
 // Iniciar o sistema
 carregarContas();
+carregarBancos();
 menuPrincipal();

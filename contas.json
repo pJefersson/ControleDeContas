@@ -1,34 +1,16 @@
 [
   {
-    "nome": "Feira",
-    "valor": "1",
-    "vencimento": "10-11-2024",
-    "banco": "nubank",
-    "paga": true
-  },
-  {
-    "nome": "teste1",
-    "valor": "3",
-    "vencimento": "10",
-    "banco": "nubank",
-    "paga": false
-  },
-  {
-    "nome": "",
-    "valor": "",
-    "vencimento": "",
-    "banco": "",
-    "paga": false
-  },
-  {
-    "nome": "1",
+    "nome": "Teste 1",
     "valor": "1",
     "vencimento": "1",
-    "banco": "nubank",
+    "banco": "Will",
     "paga": false
   },
   {
-    "nome": "Will",
-    "total": 0
+    "nome": "teste 2",
+    "valor": "2",
+    "vencimento": "2",
+    "banco": "NuBank",
+    "paga": false
   }
 ]
