@@ -4,10 +4,11 @@ const fs = require('fs'); // Módulo para manipular arquivos
 const caminhoArquivoContas = 'contas.json';
 const caminhoArquivoBancos = 'bancos.json';
 let contas = [];
-let bancos = [{value: "Nubank"}];
+let bancos = [];
 
 // Carrega as contas do arquivo JSON ao iniciar o sistema
 function carregarContas() {
+  
   if (fs.existsSync(caminhoArquivoContas)) {
     const dadosContas = fs.readFileSync(caminhoArquivoContas, 'utf-8');
     contas = JSON.parse(dadosContas);
@@ -232,7 +233,7 @@ async function excluirBanco() {
   const menuBancos = bancos.map((b) => b = {value: b.nome})
 
   if (contas.length === 0) {
-    console.log('Nenhuma conta para excluir.');
+    console.log('Nenhum banco para excluir.');
     return;
   }
   
@@ -250,8 +251,16 @@ async function excluirBanco() {
   if(selecaoBancos.length == 0){
     console.log("Nenhum banco selecionado")
   }else{
+    contas.forEach((conta)=>  {
+      if(conta.banco == bancos.value){
+        
+      }else{
+        conta.banco = ''
+      }
+    })
     bancos = [...salvasBancos]
     salvarBancos();
+    salvarContas();
     console.log('Banco excluído com sucesso!');
   }  
 }

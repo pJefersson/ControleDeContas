@@ -1,16 +1,9 @@
 [
   {
-    "nome": "Teste 1",
+    "nome": "Teste1",
     "valor": "1",
     "vencimento": "1",
-    "banco": "Will",
-    "paga": false
-  },
-  {
-    "nome": "teste 2",
-    "valor": "2",
-    "vencimento": "2",
-    "banco": "NuBank",
+    "banco": "",
     "paga": false
   }
 ]
