@@ -1,9 +1,23 @@
 [
   {
-    "nome": "Teste1",
+    "nome": "teste",
     "valor": "1",
     "vencimento": "1",
-    "banco": "",
+    "banco": "Will",
+    "paga": true
+  },
+  {
+    "nome": "Agua",
+    "valor": "3",
+    "vencimento": "10",
+    "banco": "Will",
+    "paga": false
+  },
+  {
+    "nome": "Energia",
+    "valor": "4",
+    "vencimento": "10",
+    "banco": "NuBank",
     "paga": false
   }
 ]

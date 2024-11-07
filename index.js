@@ -5,6 +5,15 @@ const caminhoArquivoContas = 'contas.json';
 const caminhoArquivoBancos = 'bancos.json';
 let contas = [];
 let bancos = [];
+let mensagem = "Bem Vindo ao APP"
+const mostrarMensagem = () => {
+  console.clear();
+  if (mensagem != ""){
+    console.log(mensagem)
+    console.log("")
+    mensagem = "  "
+  }
+}
 
 // Carrega as contas do arquivo JSON ao iniciar o sistema
 function carregarContas() {
@@ -37,7 +46,7 @@ function salvarBancos() {
 
 // Função principal do menu
 async function menuPrincipal() {
-  
+  mostrarMensagem()
   const resposta = await inquirer.prompt([
     {
       type: 'list',
@@ -96,7 +105,7 @@ async function adicionarBanco() {
     console.log("Formato de banco inválido")
     
   }else{
-    bancos.push({...novoBanco});
+    bancos.push({nome: novoBanco.nome, total: 0});
     salvarBancos();
     console.log(`Banco: ${novoBanco.nome} adicionado com sucesso!`);
   }  
@@ -156,23 +165,27 @@ async function listarContas() {
   }])
 }
 // Função para listar totais por cartão/banco
-function totalPorCartao(){
-  let nubank = 0;
-  let will = 0;
-  let picpay = 0;
-  contas.forEach((conta)=>{
-    if (conta.banco == "nubank") {
-      nubank += parseFloat(conta.valor);
-    }else if(conta.banco == "will"){
-      will += parseFloat(conta.valor);
-    }else if(conta.banco == "picpay"){
-      picpay += parseFloat(conta.valor);
-    }
+async function totalPorCartao(){
+  
+  
+
+  bancos.forEach((banco)=>{
+    contas.forEach((conta)=>{
+      if(conta.banco == banco.nome){
+        banco.total += parseFloat(conta.valor)
+      }   
+    })
+    
+    console.log("* " + banco.nome + ": R$" + banco.total.toFixed(2))
   })
-  console.log('\n===========================');
-  console.log(`Total de contas em Nubank: R$${nubank.toFixed(2)}`);
-  console.log(`Total de contas em Will: R$${will.toFixed(2)}`);
-  console.log(`Total de contas em PicPay: R$${picpay.toFixed(2)}`);
+  const opcao = [{value: "voltar"}]
+  const { voltar } = await inquirer.prompt([{
+    name: 'voltar',
+    type: 'list',
+    message: "",
+    choices: [...opcao]
+
+  }])
 }
 
 // Função para marcar uma conta como paga
@@ -184,10 +197,10 @@ async function marcarContaComoPaga() {
 
   const { indice } = await inquirer.prompt([
     {
-      type: 'input',
+      type: 'select',
       name: 'indice',
       message: 'Digite o número da conta a ser marcada como paga:',
-      validate: validarIndice,
+      choices: []
     },
   ]);
   

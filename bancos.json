@@ -1,8 +1,10 @@
 [
   {
-    "nome": "Will"
+    "nome": "Will",
+    "total": 0
   },
   {
-    "nome": "PicPay"
+    "nome": "NuBank",
+    "total": 0
   }
 ]
